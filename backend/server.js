@@ -1,8 +1,12 @@
-const express = require("express");
-const mongoose = require("mongoose");
+import express from 'express';
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+
 const app = express();
 import transactionRoutes from './routes/transaction.routes.js';
-
+dotenv.config();
+const PORT = process.env.PORT || 3001;
+app.use(express.json());
 app.use('/api/transactions', transactionRoutes);
 app.listen(3001,() => {
     console.log("Node server started");
