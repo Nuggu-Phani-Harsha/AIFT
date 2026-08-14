@@ -1,5 +1,5 @@
 import User from '../models/User.model.js';
-//import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../utils/jwt.utils.js';
+import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../utils/jwt.utils.js';
 
 // @desc    Register new user
 // @route   POST /api/auth/register
@@ -22,9 +22,9 @@ export const register = async (req, res) => {
       currency: currency || 'USD'
     });
 
-    //const accessToken = generateAccessToken(user._id);
-    //const refreshToken = generateRefreshToken(user._id);
-    //user.refreshToken = refreshToken;
+    const accessToken = generateAccessToken(user._id);
+    const refreshToken = generateRefreshToken(user._id);
+    user.refreshToken = refreshToken;
     await user.save();
 
     res.status(201).json({
@@ -38,8 +38,8 @@ export const register = async (req, res) => {
           currency: user.currency,
           avatar: user.avatar
         },
-        //accessToken,
-        //refreshToken
+        accessToken,
+        refreshToken
       }
     });
   } catch (error) {
