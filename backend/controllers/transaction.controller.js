@@ -3,18 +3,13 @@ import Transaction from '../models/Transaction.model.js';
 // import { v2 as cloudinary } from 'cloudinary';
 // import { createNotification, checkHighValueTransaction, checkUnusualSpending } from '../services/notification.service.js';
 
-// Cloudinary config will be initialized lazily when needed
 
-// @desc    Get all transactions for user
-// @route   GET /api/transactions
-// @access  Private
 export const getTransactions = async (req, res) => {
   try {
     const { type, category, startDate, endDate, minAmount, maxAmount, search } = req.query;
     
     const query = { user: req.user._id };
 
-    // Apply filters
     if (type) query.type = type;
     if (category) query.category = category;
     if (startDate || endDate) {
@@ -52,9 +47,7 @@ export const getTransactions = async (req, res) => {
   }
 };
 
-// @desc    Get single transaction
-// @route   GET /api/transactions/:id
-// @access  Private
+
 export const getTransaction = async (req, res) => {
   try {
     const transaction = await Transaction.findOne({
@@ -82,9 +75,7 @@ export const getTransaction = async (req, res) => {
   }
 };
 
-// @desc    Create transaction
-// @route   POST /api/transactions
-// @access  Private
+
 export const createTransaction = async (req, res) => {
     console.log('Create transaction request body:', req.body);
   try {
@@ -157,9 +148,7 @@ export const createTransaction = async (req, res) => {
   }
 };
 
-// @desc    Update transaction
-// @route   PUT /api/transactions/:id
-// @access  Private
+
 export const updateTransaction = async (req, res) => {
   try {
     const oldTransaction = await Transaction.findOne({
@@ -227,9 +216,7 @@ export const updateTransaction = async (req, res) => {
   }
 };
 
-// @desc    Delete transaction
-// @route   DELETE /api/transactions/:id
-// @access  Private
+
 export const deleteTransaction = async (req, res) => {
   try {
     const transaction = await Transaction.findOne({
@@ -284,9 +271,7 @@ export const deleteTransaction = async (req, res) => {
   }
 };
 
-// @desc    Upload receipt
-// @route   POST /api/transactions/:id/receipt
-// @access  Private
+
 export const uploadReceipt = async (req, res) => {
   try {
     if (!req.file) {

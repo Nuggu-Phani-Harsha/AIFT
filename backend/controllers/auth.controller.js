@@ -1,13 +1,11 @@
 import User from '../models/User.model.js';
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../utils/jwt.utils.js';
 
-// @desc    Register new user
-// @route   POST /api/auth/register
-// @access  Public
+
 export const register = async (req, res) => {
   try {
     const { name, email, password, currency } = req.body;
-    const existingUser = await User.findOne({ email }); // check the db if already a user exists with the same email or not
+    const existingUser = await User.findOne({ email }); 
     if (existingUser) {
       return res.status(400).json({
         success: false,
@@ -51,9 +49,7 @@ export const register = async (req, res) => {
   }
 };
 
-// @desc    Login user
-// @route   POST /api/auth/login
-// @access  Public
+
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -73,8 +69,8 @@ export const login = async (req, res) => {
         message: 'Invalid email or password'
       });
     }
-    // const accessToken = generateAccessToken(user._id);
-    // const refreshToken = generateRefreshToken(user._id);
+    const accessToken = generateAccessToken(user._id);
+    const refreshToken = generateRefreshToken(user._id);
     user.refreshToken = refreshToken;
     await user.save();
 
@@ -102,9 +98,7 @@ export const login = async (req, res) => {
   }
 };
 
-// @desc    Refresh access token
-// @route   POST /api/auth/refresh
-// @access  Public
+
 export const refreshToken = async (req, res) => {
   try {
     const { refreshToken } = req.body;
@@ -116,10 +110,7 @@ export const refreshToken = async (req, res) => {
       });
     }
 
-    // Verify refresh token
-    //const decoded = verifyRefreshToken(refreshToken);
-    
-    // Find user
+    const decoded = verifyRefreshToken(refreshToken);
     const user = await User.findById(decoded.userId).select('+refreshToken');
     
     if (!user || user.refreshToken !== refreshToken) {
@@ -129,11 +120,9 @@ export const refreshToken = async (req, res) => {
       });
     }
 
-    // Generate new tokens
-    // const newAccessToken = generateAccessToken(user._id);
-    // const newRefreshToken = generateRefreshToken(user._id);
+    const newAccessToken = generateAccessToken(user._id);
+    const newRefreshToken = generateRefreshToken(user._id);
 
-    // Update refresh token
     user.refreshToken = newRefreshToken;
     await user.save();
 
@@ -153,9 +142,7 @@ export const refreshToken = async (req, res) => {
   }
 };
 
-// @desc    Logout user
-// @route   POST /api/auth/logout
-// @access  Private
+
 export const logout = async (req, res) => {
   try {
     // Clear refresh token
@@ -176,9 +163,7 @@ export const logout = async (req, res) => {
   }
 };
 
-// @desc    Get current user
-// @route   GET /api/auth/me
-// @access  Private
+
 export const getCurrentUser = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);

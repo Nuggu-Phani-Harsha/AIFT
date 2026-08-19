@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 import transactionRoutes from './routes/transaction.routes.js';
 import authRoutes from './routes/auth.routes.js';
 
+
 dotenv.config();
 
 const app = express();
