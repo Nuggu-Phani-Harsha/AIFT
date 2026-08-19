@@ -10,13 +10,14 @@ export const protect = async (req, res, next) => {
         if(!token){
             return res.status(401).json({
                 success: false,
-                message: 'Not authorized, no token'
+                message: 'Not authorized, no token provided'
             });
         }
 
         try{
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            req.user = await User.findById(decoded.id).select('-password -refreshToken');
+            const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+
+            req.user = await User.findById(decoded.userId).select('-password -refreshToken');
 
             if(!req.user){
                 return res.status(401).json({
@@ -29,7 +30,7 @@ export const protect = async (req, res, next) => {
             console.error('Token verification error:', error);
             return res.status(401).json({
                 success: false,
-                message: 'Not authorized, token failed'
+                message: 'Not authorized, token is invalid or expired'
             });
         }
 
@@ -37,7 +38,7 @@ export const protect = async (req, res, next) => {
         console.error('Authentication middleware error:', error);
         return res.status(500).json({
             success: false,
-            message: 'Server error'
+            message: 'Server error in authentication middleware'
         });
     }
 }
